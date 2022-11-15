@@ -1,6 +1,7 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'device_info_method_channel.dart';
+import 'locale_info_model.dart';
 
 abstract class DeviceInfoPlatform extends PlatformInterface {
   /// Constructs a DeviceInfoPlatform.
@@ -25,5 +26,9 @@ abstract class DeviceInfoPlatform extends PlatformInterface {
 
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+
+  Future<LocaleInfo?> get localeInfo async {
+    throw UnimplementedError('localeInfo has not been implemented.');
   }
 }

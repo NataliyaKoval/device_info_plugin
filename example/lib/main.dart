@@ -1,3 +1,4 @@
+import 'package:device_info/locale_info_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -16,8 +17,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  //String _platformVersion = 'Unknown';
   final _deviceInfoPlugin = DeviceInfo();
+  LocaleInfo? _localeInfo;
 
   @override
   void initState() {
@@ -27,14 +29,16 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
+    //String platformVersion;
+    LocaleInfo? locale;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _deviceInfoPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      locale = await _deviceInfoPlugin.localeInfo;
+      // platformVersion =
+      //     await _deviceInfoPlugin.getPlatformVersion() ?? 'Unknown platform version';
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      //platformVersion = 'Failed to get platform version.';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -43,7 +47,8 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _platformVersion = platformVersion;
+      // _platformVersion = platformVersion;
+      _localeInfo = locale;
     });
   }
 
@@ -54,8 +59,38 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: SizedBox(
+          width: double.infinity,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //Text('Running on: $_platformVersion\n'),
+                RichText(
+                  text: TextSpan(
+                      text: 'Device language: ',
+                      style:
+                          const TextStyle(fontSize: 24, color: Colors.indigo),
+                      children: [
+                        TextSpan(
+                            text: '${_localeInfo?.language}',
+                            style: const TextStyle(
+                                fontSize: 22, color: Colors.black54)),
+                      ]),
+                ),
+                RichText(
+                  text: TextSpan(
+                      text: 'User\'s region: ',
+                      style:
+                          const TextStyle(fontSize: 24, color: Colors.indigo),
+                      children: [
+                        TextSpan(
+                            text: '${_localeInfo?.country}',
+                            style: const TextStyle(
+                                fontSize: 22, color: Colors.black54)),
+                      ]),
+                ),
+              ]),
         ),
       ),
     );
